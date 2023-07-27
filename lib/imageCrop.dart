@@ -7,9 +7,12 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 
+
 class ImageCrop extends StatelessWidget {
   final File? data;
-  const ImageCrop({Key? key, required this.data}) : super(key: key);
+  const ImageCrop({Key? key}) : super(key: key);
+
+  Future<void> _crop
 
 
   // This widget is the root of your application.

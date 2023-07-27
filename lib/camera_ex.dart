@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'imageCrop.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 
 
@@ -17,6 +17,40 @@ class _CameraExampleState extends State<CameraExample> {
 
   File? _image;
   final picker = ImagePicker();
+
+  Future<void> _cropImage() async{
+    if(_image != null){
+      CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: _image!.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+            presentStyle: CropperPresentStyle.dialog,
+            boundary: const CroppieBoundary(
+              width: 520,
+              height: 520,
+            ),
+            viewPort:
+            const CroppieViewPort(width: 480, height: 480, type: 'circle'),
+            enableExif: true,
+            enableZoom: true,
+            showZoomer: true,
+          ),
+        ],
+      );
+    }
+  }
 
   // 비동기 처리를 통해 카메라와 갤러리에서 이미지를 가져온다.
   Future getImage(ImageSource imageSource) async {
@@ -81,7 +115,7 @@ class _CameraExampleState extends State<CameraExample> {
                   heroTag: "btn4",
                   tooltip: 'crop image',
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) =>ImageCrop(data: _image) ));
+                    _cropImage();
                   },
                   child: Icon(Icons.search),
                 ),
