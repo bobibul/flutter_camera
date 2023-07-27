@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
+
 
 
 
@@ -16,11 +19,12 @@ class CameraExample extends StatefulWidget {
 class _CameraExampleState extends State<CameraExample> {
 
   File? _image;
+  CroppedFile? _croppedFile;
   final picker = ImagePicker();
 
   Future<void> _cropImage() async{
     if(_image != null){
-      CroppedFile? croppedImage = await ImageCropper().cropImage(
+      final croppedFile = await ImageCropper().cropImage(
         sourcePath: _image!.path,
         compressFormat: ImageCompressFormat.jpg,
         compressQuality: 100,
@@ -49,6 +53,11 @@ class _CameraExampleState extends State<CameraExample> {
           ),
         ],
       );
+      if (croppedFile != null){
+        setState(() {
+          _croppedFile = croppedFile;
+        });
+      }
     }
   }
 
